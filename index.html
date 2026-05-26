@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta property="og:title" content="RAM Space Industries — Academy"/>
+<meta property="og:description" content="Second Fleet Academy Exam — Login Required"/>
+<title>RAM Space Industries — Trainee to Cadet Exam</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#04070f;--bg2:#060c18;--bg3:#091220;
+    --div:#c8960a;--div-d:rgba(200,150,10,0.12);
+    --cyan:#00c8ff;--amber:#c8960a;--red:#e84040;--green:#1fc8a0;
+    --white:#e8f4ff;--text2:#8ab8d8;--text3:#4a7aaa;--text4:#2a4a6a;
+    --mono:"Share Tech Mono","Courier New",monospace;
+    --display:"Barlow Condensed","Arial Narrow",sans-serif;
+    --border:rgba(0,200,255,0.15);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--white);font-family:var(--mono);min-height:100vh;
+    background-image:linear-gradient(rgba(0,180,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.03) 1px,transparent 1px);
+    background-size:50px 50px;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(4,7,15,0.97);backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;}
+  .nav-logo{font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:0.15em;color:var(--white);text-transform:uppercase;}
+  .nav-logo span{color:var(--amber);}
+  .nav-tag{font-size:9px;letter-spacing:0.2em;color:var(--amber);border:1px solid rgba(200,150,10,0.4);padding:3px 10px;text-transform:uppercase;}
+  .container{max-width:860px;margin:0 auto;padding:100px 40px 80px;}
+  .exam-header{border-bottom:1px solid var(--border);padding-bottom:32px;margin-bottom:40px;}
+  .exam-tag{font-size:10px;letter-spacing:0.25em;color:var(--amber);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+  .exam-tag::before{content:"";display:block;width:24px;height:1px;background:var(--amber);}
+  .exam-title{font-family:var(--display);font-size:clamp(36px,6vw,64px);font-weight:700;text-transform:uppercase;line-height:0.95;margin-bottom:16px;}
+  .exam-title em{font-style:normal;color:var(--amber);}
+  .exam-sub{font-size:13px;color:var(--text2);line-height:1.8;max-width:600px;}
+  .info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:40px;}
+  .info-card{background:var(--bg2);border:1px solid var(--border);padding:16px;}
+  .info-label{font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:6px;}
+  .info-value{font-family:var(--display);font-size:22px;font-weight:700;color:var(--amber);}
+  #gate{background:var(--bg2);border:1px solid var(--border);padding:40px;margin-bottom:40px;}
+  .gate-title{font-family:var(--display);font-size:28px;font-weight:700;text-transform:uppercase;margin-bottom:8px;}
+  .gate-sub{font-size:12px;color:var(--text2);margin-bottom:24px;}
+  .inp{width:100%;background:rgba(200,150,10,0.04);border:1px solid var(--border);color:var(--white);
+    font-family:var(--mono);font-size:13px;padding:12px 16px;outline:none;transition:border-color 0.2s;}
+  .inp:focus{border-color:var(--amber);}
+  .inp::placeholder{color:var(--text4);}
+  .btn-start{width:100%;margin-top:14px;background:var(--amber);color:var(--bg);border:none;
+    font-family:var(--mono);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;padding:14px;cursor:pointer;font-weight:700;}
+  .btn-start:disabled{background:var(--text4);cursor:not-allowed;}
+  #progress-wrap{display:none;margin-bottom:32px;}
+  .progress-label{display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.15em;color:var(--text3);text-transform:uppercase;margin-bottom:8px;}
+  .progress-track{height:2px;background:var(--bg3);}
+  .progress-fill{height:100%;background:var(--amber);transition:width 0.4s ease;width:0%;}
+  #exam{display:none;}
+  .question-block{background:var(--bg2);border:1px solid var(--border);padding:32px;margin-bottom:4px;display:none;}
+  .question-block.active{display:block;}
+  .q-number{font-size:9px;letter-spacing:0.25em;color:var(--text3);text-transform:uppercase;margin-bottom:12px;}
+  .q-type-tag{display:inline-block;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;padding:2px 8px;margin-bottom:16px;border:1px solid;}
+  .q-type-tag.mc{color:var(--amber);border-color:var(--amber);opacity:0.8;}
+  .q-type-tag.gk{color:var(--cyan);border-color:var(--cyan);opacity:0.8;}
+  .q-type-tag.sc{color:var(--green);border-color:var(--green);opacity:0.8;}
+  .q-text{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.3;margin-bottom:24px;color:var(--white);}
+  .q-scenario{background:var(--bg3);border-left:2px solid var(--green);padding:14px 16px;font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:20px;}
+  .options{display:flex;flex-direction:column;gap:6px;}
+  .option{display:flex;align-items:center;gap:14px;background:var(--bg3);border:1px solid var(--text4);padding:14px 16px;cursor:pointer;transition:all 0.15s;}
+  .option:hover,.option.selected{border-color:var(--amber);background:var(--div-d);}
+  .option-letter{font-size:11px;letter-spacing:0.15em;color:var(--text3);min-width:20px;}
+  .option.selected .option-letter{color:var(--amber);}
+  .option-text{font-size:13px;line-height:1.6;color:var(--text2);}
+  .option.selected .option-text{color:var(--white);}
+  .scenario-textarea{width:100%;background:rgba(200,150,10,0.04);border:1px solid var(--border);color:var(--white);
+    font-family:var(--mono);font-size:13px;padding:14px 16px;outline:none;resize:vertical;min-height:160px;line-height:1.8;}
+  .scenario-textarea:focus{border-color:var(--amber);}
+  .char-count{font-size:10px;color:var(--text3);text-align:right;margin-top:6px;}
+  .q-nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);}
+  .btn-nav{background:transparent;color:var(--text3);border:1px solid var(--text4);font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:10px 24px;cursor:pointer;}
+  .btn-nav:hover{border-color:var(--amber);color:var(--amber);}
+  .btn-nav:disabled{opacity:0.3;cursor:not-allowed;}
+  .btn-next{background:var(--amber);color:var(--bg);border:none;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:10px 28px;cursor:pointer;font-weight:700;}
+  .btn-next:disabled{background:var(--text4);cursor:not-allowed;}
+  .q-counter{font-size:10px;color:var(--text3);letter-spacing:0.1em;}
+  #review{display:none;}
+  .review-header{background:var(--bg2);border:1px solid var(--border);padding:32px;margin-bottom:4px;}
+  .review-title{font-family:var(--display);font-size:36px;font-weight:700;text-transform:uppercase;margin-bottom:8px;}
+  .review-sub{font-size:13px;color:var(--text2);line-height:1.8;}
+  .review-item{background:var(--bg2);border:1px solid var(--border);padding:24px;margin-bottom:4px;}
+  .review-q{font-size:11px;color:var(--text3);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;}
+  .review-question{font-size:15px;color:var(--white);margin-bottom:10px;line-height:1.5;}
+  .review-answer{font-size:13px;color:var(--amber);padding:10px 14px;background:var(--div-d);border-left:2px solid var(--amber);}
+  .review-answer.sc-ans{color:var(--green);background:rgba(31,200,160,0.08);border-left-color:var(--green);}
+  .btn-submit{width:100%;background:var(--amber);color:var(--bg);border:none;font-family:var(--mono);font-size:13px;
+    letter-spacing:0.15em;text-transform:uppercase;padding:16px;cursor:pointer;font-weight:700;margin-top:4px;}
+  .btn-submit:disabled{background:var(--text4);cursor:not-allowed;}
+  #submitted{display:none;}
+  .submitted-box{background:var(--bg2);border:1px solid rgba(200,150,10,0.3);padding:48px 40px;text-align:center;}
+  .submitted-icon{font-size:48px;margin-bottom:20px;display:block;}
+  .submitted-title{font-family:var(--display);font-size:40px;font-weight:700;text-transform:uppercase;color:var(--amber);margin-bottom:12px;}
+  .submitted-sub{font-size:14px;color:var(--text2);line-height:1.8;max-width:500px;margin:0 auto;}
+  .admin-title{font-family:var(--display);font-size:28px;font-weight:700;text-transform:uppercase;color:var(--red);margin-bottom:4px;}
+  .admin-sub{font-size:12px;color:var(--text3);margin-bottom:24px;}
+  .btn-admin-login{background:var(--red);color:var(--white);border:none;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:12px 20px;cursor:pointer;}
+  .submission-card{background:var(--bg2);border:1px solid var(--border);padding:22px;margin-bottom:4px;transition:opacity 0.4s;}
+  .pass{color:var(--green);} .review-score{color:var(--amber);}
+  .correct{color:var(--green);} .wrong{color:var(--red);} .scenario-ans{color:var(--amber);font-style:italic;}
+  .btn-promote{background:var(--green);color:var(--bg);border:none;font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 16px;cursor:pointer;margin-top:12px;}
+  footer{margin-top:80px;padding:32px 40px;border-top:1px solid var(--border);font-size:10px;color:var(--text4);letter-spacing:0.15em;text-transform:uppercase;text-align:center;}
+  @media(max-width:600px){.container{padding:90px 20px 60px;}nav{padding:0 20px;}.info-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">RAM<span> Space Industries</span></div>
+  <div class="nav-tag">⬡ Trainee &#8594; Cadet Exam</div>
+</nav>
+<div class="container">
+  <div class="exam-header">
+    <div class="exam-tag">Second Fleet Academy &#xB7; General Examination</div>
+    <h1 class="exam-title">Trainee <em>&#8594;</em> Cadet<br><em>General</em> Exam</h1>
+    <p class="exam-sub">This is the general Trainee to Cadet examination. It covers org knowledge, game mechanics, chain of command, and written scenario responses. Complete all questions honestly and thoroughly. Your answers are submitted to the Admiral for review.</p>
+  </div>
+  <div class="info-grid">
+    <div class="info-card"><div class="info-label">Questions</div><div class="info-value">18</div></div>
+    <div class="info-card"><div class="info-label">MC + GK</div><div class="info-value">12</div></div>
+    <div class="info-card"><div class="info-label">Scenarios</div><div class="info-value">6</div></div>
+    <div class="info-card"><div class="info-label">Log Number</div><div class="info-value" style="font-size:11px;color:var(--amber);">RHL-ACM-2956-T2C</div></div>
+  </div>
+  <div id="gate">
+    <div class="gate-title">Enter Your Callsign</div>
+    <div class="gate-sub">Your answers will be submitted under your callsign. Make sure it matches exactly.</div>
+    <input class="inp" id="cs-inp" placeholder="Enter callsign..." maxlength="30" oninput="this.value=this.value.toUpperCase();checkCS()"/>
+    <button class="btn-start" id="btn-start" onclick="startExam()" disabled>Begin Examination &#8594;</button>
+  </div>
+  <div id="progress-wrap">
+    <div class="progress-label"><span id="prog-lbl">Question 1 of 18</span><span id="prog-pct">0%</span></div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+  <div id="exam"></div>
+  <div id="review"></div>
+  <div id="submitted">
+    <div class="submitted-box">
+      <span class="submitted-icon">&#11041;</span>
+      <div class="submitted-title">Exam Submitted</div>
+      <p class="submitted-sub">Your Trainee to Cadet general exam has been submitted to the Admiral for review. You will be notified via Discord. Stand by.</p>
+      <div style="margin-top:20px;font-size:11px;color:var(--text3);letter-spacing:0.15em;" id="sub-id"></div>
+    </div>
+  </div>
+  <div id="admin-wrap"></div>
+</div>
+<footer>RAM Space Industries &#xB7; Second Fleet Academy &#xB7; RHL-ACM-2956-T2C &#xB7; Founded in the Verse</footer>
+<script>
+const FS='https://firestore.googleapis.com/v1/projects/ramsorg-e0c22/databases/(default)/documents';
+async function fsAdd(col,data){const r=await fetch(FS+'/'+col,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:toFS(data)})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'fail');return j.name.split('/').pop();}
+async function fsGet(col){const r=await fetch(FS+'/'+col+'?pageSize=200');const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'fail');return(j.documents||[]).map(d=>({id:d.name.split('/').pop(),...fromFS(d.fields)}));}
+async function fsPatch(col,id,data){const keys=Object.keys(data);const url=FS+'/'+col+'/'+id+'?'+keys.map(k=>'updateMask.fieldPaths='+k).join('&');const r=await fetch(url,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:toFS(data)})});return r.ok;}
+function toFS(o){const f={};for(const[k,v]of Object.entries(o))f[k]=toFSV(v);return f;}
+function toFSV(v){if(v===null||v===undefined)return{nullValue:null};if(typeof v==='boolean')return{booleanValue:v};if(typeof v==='number')return Number.isInteger(v)?{integerValue:String(v)}:{doubleValue:v};if(typeof v==='string')return{stringValue:v};if(Array.isArray(v))return{arrayValue:{values:v.map(toFSV)}};if(typeof v==='object')return{mapValue:{fields:toFS(v)}};return{stringValue:String(v)};}
+function fromFS(f){if(!f)return{};const o={};for(const[k,v]of Object.entries(f))o[k]=fromFSV(v);return o;}
+function fromFSV(v){if('nullValue'in v)return null;if('booleanValue'in v)return v.booleanValue;if('integerValue'in v)return parseInt(v.integerValue);if('doubleValue'in v)return v.doubleValue;if('stringValue'in v)return v.stringValue;if('arrayValue'in v)return(v.arrayValue.values||[]).map(fromFSV);if('mapValue'in v)return fromFS(v.mapValue.fields||{});return null;}
+
+const QUESTIONS=[{"id": 1, "type": "mc", "text": "During a live op a Fleet Captain gives an order you believe is tactically wrong. What is the correct action?", "options": ["Argue your point immediately on fleet comms", "Ignore the order and act on your own judgement", "Follow the order and raise your concern professionally during debrief", "Ask other crew members to vote on it mid-op"], "correct": 2}, {"id": 2, "type": "mc", "text": "A Gamma fleet op is underway. The Strike Leader gives your squad an order that contradicts what the Fleet Commander said 2 minutes ago. What do you do?", "options": ["Follow the Strike Leader — they are closer to the action", "Follow the Fleet Commander's order — the FC outranks the SL", "Do nothing until both clarify", "Leave the op and report the confusion"], "correct": 1}, {"id": 3, "type": "mc", "text": "Your branch's Fleet Captain wants to deploy outside home territory for a major op. What is the correct approval process?", "options": ["Fleet Captain decides alone — it is their fleet", "Fleet Captain asks the Fleet Commander who then decides", "Fleet Captain requests Admiral approval — Admiral makes the final call", "Fleet Captain asks a majority vote from branch members"], "correct": 2}, {"id": 4, "type": "mc", "text": "Which of the following correctly describes the Strike Leader's authority in a Gamma fleet op?", "options": ["The Strike Leader commands the entire Gamma fleet", "The Strike Leader commands their squadron only and reports to the Fleet Commander", "The Strike Leader outranks Fleet Captains during Gamma ops", "The Strike Leader can override the Fleet Commander if they disagree"], "correct": 1}, {"id": 5, "type": "mc", "text": "A new member joins RAM and asks what division they should pick. They enjoy combat and protecting their crew. Which division is most appropriate?", "options": ["HAUL", "HORIZON", "VANGUARD", "CLAIM"], "correct": 2}, {"id": 6, "type": "mc", "text": "During a Beta fleet op the flagship takes critical hull damage and the Fleet Captain is incapacitated. Who takes command?", "options": ["The highest ranking member on the flagship", "The Strike Leader", "The Fleet Commander if present — otherwise the next Captain on the fleet roster", "Any Sergeant can step up"], "correct": 2}, {"id": 7, "type": "gk", "text": "In Star Citizen 4.8, what happens when a ship's power relay fuse blows during combat?", "options": ["The entire ship loses power permanently", "All components connected to that relay lose power until the fuse is physically replaced", "Only weapons are affected", "The ship enters emergency mode automatically"], "correct": 1}, {"id": 8, "type": "gk", "text": "In Star Citizen 4.8, what is the correct way to deny oxygen to hostile boarders in a specific compartment?", "options": ["Close all doors manually and hope they run out", "Use the engineering console Rooms View to vent atmosphere from that compartment", "Activate the ship self-destruct sequence", "There is no way to deny oxygen to boarders"], "correct": 1}, {"id": 9, "type": "gk", "text": "What does Blood Drug Level (BDL) reaching 100% do to a player in Star Citizen 4.8?", "options": ["Fully heals the player", "The player enters overdose — collapses and takes escalating damage", "The player gains a temporary speed boost", "Nothing — BDL is cosmetic only"], "correct": 1}, {"id": 10, "type": "gk", "text": "In Star Citizen 4.8, what is the primary difference between active and passive scanning?", "options": ["Active scan is faster but shorter range than passive", "Active scan reveals more detail but exposes your position — passive is stealthy but reveals less", "There is no difference — both give identical information", "Passive scan only works on ships — active scan works on everything"], "correct": 1}, {"id": 11, "type": "gk", "text": "In Star Citizen 4.8 mining, what does HIGH INSTABILITY on a rock mean for the operator?", "options": ["The rock has very high resistance and needs more laser power", "The rock is extremely valuable and worth pursuing", "Small changes in laser power cause large and dangerous charge swings", "The rock is too small to mine profitably"], "correct": 2}, {"id": 12, "type": "gk", "text": "In Star Citizen 4.8, the MISC Starlite is specifically designed for what role?", "options": ["Combat escort for haulers", "Dedicated in-flight refueling of other ships", "Long range exploration and scouting", "Medical evacuation"], "correct": 1}, {"id": 13, "type": "scenario", "text": "You are a Trainee in VANGUARD on a Beta fleet op. Your ship takes heavy damage and you are forced to break formation to survive.", "scenario": "Your Fleet Captain has not given permission to break formation. You have seconds to decide. Walk through exactly what you do in the moment, what you communicate, and how you handle it during debrief if questioned."}, {"id": 14, "type": "scenario", "text": "You witness a fellow Trainee repeatedly ignoring orders from their Corporal during a live op. The Corporal does not seem to notice.", "scenario": "The op is still running. What do you do in the moment? What do you do after the op? Who do you speak to and how do you raise it without causing unnecessary conflict?"}, {"id": 15, "type": "scenario", "text": "You are crewing a HAUL ship during a Beta op when two hostile ships appear. Your Fleet Captain orders all non-combat ships to hold position. A VANGUARD member on comms says to scatter and run.", "scenario": "Two contradicting orders. One from your Fleet Captain, one from a VANGUARD member. Walk through exactly what you do and why."}, {"id": 16, "type": "scenario", "text": "During a Gamma fleet op HORIZON reports a hostile fleet moving toward the industrial element. The Fleet Commander has not yet responded on comms. You are in the industrial element.", "scenario": "The threat is 2 minutes away. FC is silent. Walk through every decision you make — what you do, what you say, who you contact, and in what order."}, {"id": 17, "type": "scenario", "text": "You have been in the org for several weeks as a Trainee. A new Recruit asks you for advice on how to behave in their first live op.", "scenario": "Write out the key things you would tell them — about comms, chain of command, their role, mistakes, and what happens after the op. This is a written response — write it as if you are actually speaking to them."}, {"id": 18, "type": "scenario", "text": "Your Instructor tells you that you are ready to advance to Cadet. You feel you are not ready yet — you have not fully understood your division's procedures and made a significant error in your last op.", "scenario": "What do you do? Do you accept the advancement, raise your concerns, or something else? Walk through your reasoning and what you would say to your Instructor."}];
+const ADMIN_PASS='captainram';
+const EXAM_ID='RHL-ACM-2956-T2C';
+let callsign='',answers={};
+
+function checkCS(){document.getElementById('btn-start').disabled=document.getElementById('cs-inp').value.trim().length<2;}
+function startExam(){callsign=document.getElementById('cs-inp').value.trim();if(callsign.length<2)return;document.getElementById('gate').style.display='none';document.getElementById('progress-wrap').style.display='block';document.getElementById('exam').style.display='block';renderQ(0);}
+
+function renderQ(idx){
+  const q=QUESTIONS[idx];
+  const pct=Math.round(idx/QUESTIONS.length*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-lbl').textContent='Question '+(idx+1)+' of '+QUESTIONS.length;
+  const isLast=idx===QUESTIONS.length-1;
+  let html='';
+  if(q.type==='mc'||q.type==='gk'){
+    const saved=answers[q.id]!==undefined?answers[q.id].answer:null;
+    const label=q.type==='gk'?'Game Knowledge':'Multiple Choice';
+    const cls=q.type==='gk'?'gk':'mc';
+    html='<div class="question-block active"><div class="q-number">Question '+(idx+1)+' of '+QUESTIONS.length+'</div>'
+      +'<div class="q-type-tag '+cls+'">'+label+'</div>'
+      +'<div class="q-text">'+q.text+'</div>'
+      +'<div class="options" id="opts-'+idx+'">'
+      +q.options.map((o,i)=>'<div class="option'+(saved===i?' selected':'')+'" onclick="pick('+idx+','+i+')" id="o-'+idx+'-'+i+'"><span class="option-letter">'+String.fromCharCode(65+i)+'.</span><span class="option-text">'+o+'</span></div>').join('')
+      +'</div><div class="q-nav">'
+      +'<button class="btn-nav" onclick="goQ('+(idx-1)+')" '+(idx===0?'disabled':'')+'>&#8592; Back</button>'
+      +'<span class="q-counter">'+(idx+1)+' / '+QUESTIONS.length+'</span>'
+      +'<button class="btn-next" id="bn-'+idx+'" onclick="goQ('+(idx+1)+')" '+(saved===null?'disabled':'')+'>'+(isLast?'Review &#8594;':'Next &#8594;')+'</button>'
+      +'</div></div>';
+  }else{
+    const saved=answers[q.id]!==undefined?answers[q.id].answer:'';
+    html='<div class="question-block active"><div class="q-number">Question '+(idx+1)+' of '+QUESTIONS.length+'</div>'
+      +'<div class="q-type-tag sc">Scenario</div>'
+      +'<div class="q-text">'+q.text+'</div>'
+      +'<div class="q-scenario"><strong style="color:var(--green)">Situation:</strong> '+q.scenario+'</div>'
+      +'<textarea class="scenario-textarea" id="sc-'+idx+'" placeholder="Write your response here — be thorough, this is a senior exam..." oninput="onSC('+idx+',this)" maxlength="1000">'+saved+'</textarea>'
+      +'<div class="char-count" id="cc-'+idx+'">'+saved.length+' / 1000</div>'
+      +'<div class="q-nav">'
+      +'<button class="btn-nav" onclick="goQ('+(idx-1)+')" '+(idx===0?'disabled':'')+'>&#8592; Back</button>'
+      +'<span class="q-counter">'+(idx+1)+' / '+QUESTIONS.length+'</span>'
+      +'<button class="btn-next" id="bns-'+idx+'" onclick="goQ('+(idx+1)+')" '+(saved.length<30?'disabled':'')+'>'+(isLast?'Review &#8594;':'Next &#8594;')+'</button>'
+      +'</div></div>';
+  }
+  document.getElementById('exam').innerHTML=html;
+}
+
+function pick(qi,oi){const q=QUESTIONS[qi];answers[q.id]={type:q.type,answer:oi,answerText:q.options[oi],correct:oi===q.correct};document.querySelectorAll('#opts-'+qi+' .option').forEach((el,i)=>el.classList.toggle('selected',i===oi));document.getElementById('bn-'+qi).disabled=false;}
+function onSC(qi,el){const q=QUESTIONS[qi];answers[q.id]={type:'scenario',answer:el.value,correct:null};document.getElementById('cc-'+qi).textContent=el.value.length+' / 1000';document.getElementById('bns-'+qi).disabled=el.value.length<30;}
+function goQ(idx){if(idx<0||idx>QUESTIONS.length)return;if(idx===QUESTIONS.length){showReview();return;}renderQ(idx);}
+
+function showReview(){
+  document.getElementById('exam').style.display='none';
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('prog-pct').textContent='100%';
+  document.getElementById('prog-lbl').textContent='Review your answers';
+  const el=document.getElementById('review');el.style.display='block';
+  let html='<div class="review-header"><div class="review-title">Review Your Answers</div>'
+    +'<div class="review-sub">Check everything before submitting. Scenario responses can still be edited. This is a senior exam — your answers should reflect that. Results reviewed by the Admiral via Discord.</div></div>';
+  QUESTIONS.forEach((q,idx)=>{
+    const ans=answers[q.id];
+    let disp='',cls='';
+    if(!ans)disp='<span style="color:var(--red)">&#9888; Not answered</span>';
+    else if(q.type==='scenario'){disp=ans.answer||'No response';cls='sc-ans';}
+    else disp=String.fromCharCode(65+ans.answer)+'. '+ans.answerText;
+    const edit=q.type==='scenario'?'<button class="btn-nav" style="margin-top:10px;font-size:10px;" onclick="editQ('+idx+')">&#9999; Edit Response</button>':'<div style="font-size:10px;color:var(--text4);margin-top:8px;">MC answers cannot be changed.</div>';
+    html+='<div class="review-item"><div class="review-q">Q'+(idx+1)+' &#xB7; '+(q.type==='gk'?'Game Knowledge':q.type==='mc'?'Multiple Choice':'Scenario')+'</div>'
+      +'<div class="review-question">'+q.text+'</div>'
+      +'<div class="review-answer '+cls+'">'+disp+'</div>'+edit+'</div>';
+  });
+  const ok=QUESTIONS.every(q=>answers[q.id]&&(q.type==='scenario'?answers[q.id].answer.length>=30:true));
+  html+='<button class="btn-submit" id="btn-sub" onclick="submitExam()" '+(ok?'':'disabled')+'>'+(ok?'&#11041; Submit Exam to Admiral &#8594;':'&#9888; Answer All Questions Before Submitting')+'</button>';
+  el.innerHTML=html;
+}
+
+function editQ(idx){document.getElementById('review').style.display='none';document.getElementById('exam').style.display='block';renderQ(idx);}
+
+async function submitExam(){
+  const btn=document.getElementById('btn-sub');btn.disabled=true;btn.textContent='Submitting...';
+  const gradable=QUESTIONS.filter(q=>q.type==='mc'||q.type==='gk');
+  const correct=gradable.filter(q=>answers[q.id]&&answers[q.id].correct).length;
+  const data={callsign,date:new Date().toISOString(),dateFormatted:new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),exam:'Trainee to Cadet - General',examId:EXAM_ID,division:'General',mcScore:correct+'/'+gradable.length,answers:JSON.stringify(QUESTIONS.map(q=>({id:q.id,question:q.text,type:q.type,answerText:answers[q.id]?(q.type==='scenario'?answers[q.id].answer:answers[q.id].answerText):null,correct:answers[q.id]?answers[q.id].correct:null}))),status:'pending',promoted:false};
+  try{const id=await fsAdd('exam_submissions',data);document.getElementById('review').style.display='none';document.getElementById('submitted').style.display='block';document.getElementById('sub-id').textContent='Submission ID: '+id;}
+  catch(e){btn.disabled=false;btn.textContent='Submit Failed - Try Again';console.error(e);}
+}
+
+window.addEventListener('load',()=>{
+  if(window.location.href.indexOf('admin')!==-1){
+    document.getElementById('admin-wrap').innerHTML=
+      '<div style="margin-top:60px;background:#060c18;border:1px solid rgba(232,64,64,0.2);padding:32px;">'
+      +'<div class="admin-title">&#11041; Admiral Review Panel &#x2014; Trainee to Cadet</div>'
+      +'<div class="admin-sub">Trainee to Cadet general exam submissions.</div>'
+      +'<div style="display:flex;gap:10px;margin-bottom:20px;" id="alog">'
+      +'<input class="inp" id="apass" type="password" placeholder="Admin password..." style="max-width:300px;text-transform:none;"/>'
+      +'<button class="btn-admin-login" onclick="aLogin()">Unlock Panel</button></div>'
+      +'<div id="asubs"></div></div>';
+  }
+});
+
+function aLogin(){const p=document.getElementById('apass').value;if(p===ADMIN_PASS){document.getElementById('alog').style.display='none';loadSubs();}else{document.getElementById('apass').style.borderColor='var(--red)';setTimeout(()=>document.getElementById('apass').style.borderColor='',1500);}}
+
+async function loadSubs(){
+  const el=document.getElementById('asubs');
+  el.innerHTML='<div style="font-size:12px;color:var(--text3);padding:16px;">Loading...</div>';
+  try{
+    const all=await fsGet('exam_submissions');
+    const docs=all.filter(d=>d.examId===EXAM_ID).sort((a,b)=>new Date(b.date)-new Date(a.date));
+    if(!docs.length){el.innerHTML='<div style="font-size:12px;color:var(--text3);padding:16px;">No submissions yet.</div>';return;}
+    el.innerHTML=docs.map(d=>{
+      const parts=(d.mcScore||'0/12').split('/');
+      const pct=Math.round(parseInt(parts[0])/parseInt(parts[1])*100);
+      let ans=[];try{ans=JSON.parse(d.answers||'[]');}catch(e){}
+      return '<div class="submission-card" id="sc-'+d.id+'">'
+        +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px;flex-wrap:wrap;">'
+        +'<div><div style="font-family:var(--display);font-size:20px;font-weight:700;text-transform:uppercase;">'+(d.callsign||'')+'</div>'
+        +'<div style="font-size:10px;color:var(--text3);">'+(d.dateFormatted||'')+' &#xB7; Trainee to Cadet General</div></div>'
+        +'<div><div style="font-family:var(--display);font-size:18px;font-weight:700;" class="'+(pct>=70?'pass':'review-score')+'">MC+GK: '+d.mcScore+' ('+pct+'%)</div>'
+        +'<div style="font-size:10px;color:var(--text3);margin-top:4px;">Status: '+(d.promoted?'&#10003; Promoted':d.status||'pending')+'</div></div></div>'
+        +'<div style="margin-bottom:14px;">'+ans.map(a=>'<div style="display:flex;flex-direction:column;gap:3px;padding:7px 0;border-bottom:1px solid var(--text4);">'
+          +'<div style="font-size:10px;color:var(--text3);">Q'+a.id+' ['+( a.type==='gk'?'GK':a.type==='mc'?'MC':'SC')+'] '+a.question+'</div>'
+          +'<div style="font-size:12px;padding-left:16px;" class="'+(a.type==='scenario'?'scenario-ans':a.correct?'correct':'wrong')+'">'
+          +'&#8594; '+(a.answerText||'No answer')+(a.type!=='scenario'?(a.correct?' &#10003;':' &#10007;'):'')+'</div></div>').join('')+'</div>'
+        +(!d.promoted
+          ?'<div style="display:flex;gap:8px;flex-wrap:wrap;">'
+            +'<button class="btn-promote" onclick="approve(this)" data-id="'+d.id+'" data-cs="'+d.callsign+'" data-score="'+d.mcScore+'" data-date="'+(d.dateFormatted||'')+'">&#10003; Approve &#x2014; Promote to Cadet</button>'
+            +'<button class="btn-promote" style="background:var(--red);color:var(--white);" onclick="reject(this)" data-id="'+d.id+'" data-cs="'+d.callsign+'">&#10007; Reject</button></div>'
+          :'<div style="font-size:11px;color:var(--green);margin-top:8px;">&#10003; Promoted to Cadet</div>')
+        +'</div>';
+    }).join('');
+  }catch(e){el.innerHTML='<div style="font-size:12px;color:var(--red);padding:16px;">Error: '+e.message+'</div>';}
+}
+
+async function approve(btn){
+  const id=btn.dataset.id,cs=btn.dataset.cs,score=btn.dataset.score,date=btn.dataset.date;
+  if(!confirm('Approve and promote '+cs+' to Cadet?'))return;
+  showCard(cs,score,date);
+  try{await fsPatch('exam_submissions',id,{promoted:true,status:'approved'});await fsPatch('members',cs,{academyRank:'Cadet'});const card=document.getElementById('sc-'+id);if(card){card.style.opacity='0';setTimeout(()=>card.remove(),400);}}catch(e){alert('Error: '+e.message);}
+}
+async function reject(btn){
+  const id=btn.dataset.id,cs=btn.dataset.cs;
+  if(!confirm('Reject '+cs+"'s submission?"))return;
+  showFail(cs);
+  try{await fsPatch('exam_submissions',id,{status:'rejected'});const card=document.getElementById('sc-'+id);if(card){card.style.opacity='0';setTimeout(()=>card.remove(),400);}}catch(e){alert('Error: '+e.message);}
+}
+
+function showCard(cs,score,date){
+  const yr=new Date().getFullYear();
+  const w=window.open('','_blank','width=720,height=680');
+  w.document.write('<!DOCTYPE html><html><head><title>RAM Promotion</title>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>'
+    +'<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>'
+    +'<style>*{margin:0;padding:0;box-sizing:border-box;}body{background:#04070f;color:#e8f4ff;font-family:"Share Tech Mono",monospace;padding:40px;}'
+    +'#card{background:#04070f;background-image:linear-gradient(rgba(0,180,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.03) 1px,transparent 1px);background-size:40px 40px;border:1px solid rgba(200,150,10,0.35);padding:36px;max-width:620px;margin:0 auto;position:relative;}'
+    +'#card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#c8960a,#e0b020,#c8960a);}'
+    +'.tag{font-size:9px;letter-spacing:0.3em;color:#c8960a;text-transform:uppercase;margin-bottom:14px;}'
+    +'.title{font-family:"Barlow Condensed",sans-serif;font-size:52px;font-weight:700;text-transform:uppercase;color:#c8960a;line-height:1;margin-bottom:6px;}'
+    +'.sub{font-size:11px;color:#4a7aaa;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:28px;}'
+    +'.div1{height:1px;background:rgba(200,150,10,0.2);margin:20px 0;}'
+    +'.grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:20px;}'
+    +'.field{background:#091220;border:1px solid rgba(200,150,10,0.1);padding:14px 16px;}'
+    +'.fl{font-size:8px;letter-spacing:0.25em;color:#3a5040;text-transform:uppercase;margin-bottom:5px;}'
+    +'.fv{font-size:15px;color:#e8f4ff;} .a{color:#c8960a;} .c{color:#00c8ff;}'
+    +'.seal{text-align:center;padding:20px;background:#060c18;border:1px solid rgba(200,150,10,0.15);margin-bottom:20px;}'
+    +'.si{font-size:32px;margin-bottom:8px;} .st{font-size:10px;letter-spacing:0.18em;color:#4a4010;text-transform:uppercase;line-height:2;}'
+    +'.fb{display:flex;justify-content:space-between;} .ft{font-size:9px;color:#2a2010;letter-spacing:0.15em;text-transform:uppercase;}'
+    +'.bw{max-width:620px;margin:20px auto 0;display:flex;gap:10px;}'
+    +'.btn{border:none;font-family:"Share Tech Mono",monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:11px 20px;cursor:pointer;flex:1;}'
+    +'.bc{background:#c8960a;color:#04070f;} .bd{background:#00c8ff;color:#04070f;}'
+    +'.db{max-width:620px;margin:16px auto 0;background:#060c18;border:1px solid rgba(200,150,10,0.15);border-left:3px solid #c8960a;padding:20px;}'
+    +'.dl{font-size:9px;letter-spacing:0.2em;color:#c8960a;text-transform:uppercase;margin-bottom:12px;}'
+    +'.dm{font-size:12px;color:#8ab8d8;line-height:2;white-space:pre-line;}</style></head><body>'
+    +'<div id="card">'
+    +'<div class="tag">&#9001; RAM Space Industries &#xB7; Second Fleet Academy &#xB7; Official Record</div>'
+    +'<div class="title">Promotion<br>Approved</div>'
+    +'<div class="sub">Trainee to Cadet &#xB7; General Examination</div>'
+    +'<div class="div1"></div>'
+    +'<div class="grid">'
+    +'<div class="field"><div class="fl">Callsign</div><div class="fv c">'+cs+'</div></div>'
+    +'<div class="field"><div class="fl">New Rank</div><div class="fv a">&#9001; Cadet</div></div>'
+    +'<div class="field"><div class="fl">Exam</div><div class="fv" style="font-size:11px;">Trainee to Cadet General</div></div>'
+    +'<div class="field"><div class="fl">MC+GK Score</div><div class="fv a">'+score+'</div></div>'
+    +'<div class="field"><div class="fl">Date</div><div class="fv" style="font-size:12px;">'+date+'</div></div>'
+    +'<div class="field"><div class="fl">Approved By</div><div class="fv" style="font-size:12px;">CAPTAINRAM - Admiral</div></div>'
+    +'</div>'
+    +'<div class="seal"><div class="si">&#9001;</div>'
+    +'<div class="st">This document certifies that the above Trainee has successfully passed<br>the general Trainee to Cadet examination<br>and is hereby advanced by order of the Admiral.<br>RAM Space Industries &#xB7; Founded in the Verse</div></div>'
+    +'<div class="fb"><div class="ft">Second Fleet Academy &#xB7; '+yr+'</div><div class="ft">RHL-ACM-2956-T2C</div></div>'
+    +'</div>'
+    +'<div class="bw">'
+    +'<button class="btn bc" id="bcp" onclick="cp()">Copy Discord Message</button>'
+    +'<button class="btn bd" id="bdl" onclick="dl()">Download Report Card PNG</button>'
+    +'</div>'
+    +'<div class="db"><div class="dl">Discord Message</div>'
+    +'<div class="dm" id="dm">RAM SPACE INDUSTRIES - ACADEMY PROMOTION NOTICE\n\nCallsign: '+cs+'\nExam: Trainee to Cadet - General\nResult: APPROVED\nNew Academy Rank: Cadet\nDate: '+date+'\nApproved By: CAPTAINRAM - Admiral\n\nCongratulations, '+cs+'. Your Trainee to Cadet general exam has been reviewed and approved by the Admiral.\n\nYour next steps:\n- Complete the Trainee to Cadet division exam for your division\n- Attend at least one unsupervised live op\n- Earn your Live Ops Sign-Off from your Instructor\n\nWell done. Keep pushing.\n\nRAM Space Industries - Founded in the Verse\nRHL-ACM-2956-T2C</div></div>'
+    +'<script>function cp(){navigator.clipboard.writeText(document.getElementById("dm").innerText).then(()=>{document.getElementById("bcp").textContent="Copied!";setTimeout(()=>document.getElementById("bcp").textContent="Copy Discord Message",2000);});}function dl(){const b=document.getElementById("bdl");b.textContent="Generating...";b.disabled=true;html2canvas(document.getElementById("card"),{backgroundColor:"#04070f",scale:2,useCORS:true,logging:false}).then(c=>{const a=document.createElement("a");a.download="RAM-Promotion-'+cs+'-Cadet-General.png";a.href=c.toDataURL("image/png");a.click();b.textContent="Downloaded!";b.disabled=false;setTimeout(()=>b.textContent="Download Report Card PNG",2000);});}<\/script></body></html>');w.document.close();
+}
+
+function showFail(cs){
+  const yr=new Date().getFullYear();
+  const w=window.open('','_blank','width=720,height=500');
+  w.document.write('<!DOCTYPE html><html><head><title>RAM Exam Result</title>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>'
+    +'<style>*{margin:0;padding:0;box-sizing:border-box;}body{background:#04070f;color:#e8f4ff;font-family:"Share Tech Mono",monospace;padding:40px;}'
+    +'#card{background:#04070f;border:1px solid rgba(232,64,64,0.25);padding:36px;max-width:620px;margin:0 auto;position:relative;}'
+    +'#card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#e84040,#ff6060,#e84040);}'
+    +'.tag{font-size:9px;letter-spacing:0.3em;color:#e84040;text-transform:uppercase;margin-bottom:14px;}'
+    +'.title{font-family:"Barlow Condensed",sans-serif;font-size:52px;font-weight:700;text-transform:uppercase;color:#e84040;line-height:1;margin-bottom:6px;}'
+    +'.sub{font-size:11px;color:#4a7aaa;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:28px;}'
+    +'.grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:20px;}'
+    +'.field{background:#091220;border:1px solid rgba(232,64,64,0.1);padding:14px 16px;}'
+    +'.fl{font-size:8px;letter-spacing:0.25em;color:#3a2020;text-transform:uppercase;margin-bottom:5px;}'
+    +'.fv{font-size:15px;color:#e8f4ff;} .r{color:#e84040;} .c{color:#00c8ff;}'
+    +'.seal{text-align:center;padding:20px;background:#060c18;border:1px solid rgba(232,64,64,0.1);margin-bottom:20px;}'
+    +'.si{font-size:32px;margin-bottom:8px;} .st{font-size:10px;letter-spacing:0.18em;color:#3a1a1a;text-transform:uppercase;line-height:2;}'
+    +'.fb{display:flex;justify-content:space-between;} .ft{font-size:9px;color:#2a1010;letter-spacing:0.15em;text-transform:uppercase;}'
+    +'.bw{max-width:620px;margin:20px auto 0;}'
+    +'.btn{border:none;font-family:"Share Tech Mono",monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:11px 20px;cursor:pointer;width:100%;background:#e84040;color:#04070f;}'
+    +'.db{max-width:620px;margin:16px auto 0;background:#060c18;border:1px solid rgba(232,64,64,0.15);border-left:3px solid #e84040;padding:20px;}'
+    +'.dl{font-size:9px;letter-spacing:0.2em;color:#e84040;text-transform:uppercase;margin-bottom:12px;}'
+    +'.dm{font-size:12px;color:#8ab8d8;line-height:2;white-space:pre-line;}</style></head><body>'
+    +'<div id="card">'
+    +'<div class="tag">&#9001; RAM Space Industries &#xB7; Second Fleet Academy &#xB7; Official Record</div>'
+    +'<div class="title">Exam Not<br>Passed</div>'
+    +'<div class="sub">Trainee to Cadet &#xB7; General Examination</div>'
+    +'<div class="grid">'
+    +'<div class="field"><div class="fl">Callsign</div><div class="fv c">'+cs+'</div></div>'
+    +'<div class="field"><div class="fl">Result</div><div class="fv r">Not Passed</div></div>'
+    +'<div class="field"><div class="fl">Exam</div><div class="fv" style="font-size:11px;">Trainee to Cadet General</div></div>'
+    +'<div class="field"><div class="fl">Reviewed By</div><div class="fv" style="font-size:12px;">CAPTAINRAM - Admiral</div></div>'
+    +'</div>'
+    +'<div class="seal"><div class="si">&#9001;</div>'
+    +'<div class="st">Review Academy materials and speak to your Instructor.<br>Retake the exam when you are ready.<br>RAM Space Industries &#xB7; Founded in the Verse</div></div>'
+    +'<div class="fb"><div class="ft">Second Fleet Academy &#xB7; '+yr+'</div><div class="ft">RHL-ACM-2956-T2C</div></div>'
+    +'</div>'
+    +'<div class="bw"><button class="btn" id="bcp" onclick="cp()">Copy Discord Message</button></div>'
+    +'<div class="db"><div class="dl">Discord Message</div>'
+    +'<div class="dm" id="dm">RAM SPACE INDUSTRIES - ACADEMY EXAM RESULT\n\nCallsign: '+cs+'\nExam: Trainee to Cadet - General\nResult: NOT PASSED\nReviewed By: CAPTAINRAM - Admiral\n\n'+cs+', your Trainee to Cadet general exam has been reviewed by the Admiral. Your submission has not met the standard required for advancement at this time.\n\nYou are encouraged to:\n- Review all org procedure documents\n- Speak to your Instructor for guidance\n- Attend more training ops\n- Retake the exam when you feel ready\n\nRAM Space Industries - Founded in the Verse\nRHL-ACM-2956-T2C</div></div>'
+    +'<script>function cp(){navigator.clipboard.writeText(document.getElementById("dm").innerText).then(()=>{document.getElementById("bcp").textContent="Copied!";setTimeout(()=>document.getElementById("bcp").textContent="Copy Discord Message",2000);});}<\/script></body></html>');w.document.close();
+}
+</script>
+</body>
+</html>
